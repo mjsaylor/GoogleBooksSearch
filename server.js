@@ -11,6 +11,9 @@ if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
 }
 
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/googlebooks";
+mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
+
 // Define API routes here
 
 // Send every other request to the React app
