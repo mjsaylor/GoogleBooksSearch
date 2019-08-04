@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import SaveBtn from "../components/SaveBtn";
+import ViewBtn from "../components/ViewBtn";
 import Jumbotron from "../components/Jumbotron";
 import API from "../utils/API";
 import { Link } from "react-router-dom";
@@ -15,6 +17,23 @@ class Books extends Component {
   componentDidMount() {
     this.searchBooks("Harry Potter");
   }
+
+  saveBook = (book) => {
+    const savedBook = {
+      title: book.volumeInfo.title,
+      authors: book.volumeInfo.authors,
+      description: book.volumeInfo.description,
+      image: book.volumeInfo.imageLinks ? book.volumeInfo.imageLinks.thumbnail : "https://imgplaceholder.com/420x320/ff7f7f/333333/fa-image",
+      link: book.volumeInfo.previewLink,
+    }
+    API.saveBook(savedBook)
+      .then(data => {
+        if (data.error) {
+          console.error(data.error)
+        }
+      })
+      .catch(err => console.log(err));
+  };
 
   searchBooks = (title) => {
     API.searchBooks(title)
@@ -40,13 +59,7 @@ class Books extends Component {
   handleFormSubmit = event => {
     event.preventDefault();
     if (this.state.title) {
-      API.saveBook({
-        title: this.state.title,
-        author: this.state.author,
-        synopsis: this.state.synopsis
-      })
-        .then(res => this.loadBooks())
-        .catch(err => console.log(err));
+      this.searchBooks(this.state.title)
     }
   };
 
@@ -87,6 +100,11 @@ class Books extends Component {
                     <strong>
                       {book.volumeInfo.title} by {book.volumeInfo.authors}
                     </strong>
+                    <br />
+                    <img src={book.volumeInfo.imageLinks ? book.volumeInfo.imageLinks.thumbnail : "https://imgplaceholder.com/420x320/ff7f7f/333333/fa-image"} />
+                    <p>{book.volumeInfo.description}</p>
+                    <SaveBtn onClick={() => this.saveBook(book)} />
+                    <ViewBtn href={book.volumeInfo.previewLink} />
                   </ListItem>
                 ))}
               </List>

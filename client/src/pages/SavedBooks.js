@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import DeleteBtn from "../components/DeleteBtn";
+import ViewBtn from "../components/ViewBtn";
 import Jumbotron from "../components/Jumbotron";
 import API from "../utils/API";
 import { Link } from "react-router-dom";
@@ -69,12 +70,14 @@ class Books extends Component {
               <List>
                 {this.state.books.map(book => (
                   <ListItem key={book._id}>
-                    <Link to={"/books/" + book._id}>
                       <strong>
-                        {book.title} by {book.author}
+                        {book.title} by {book.authors}
                       </strong>
-                    </Link>
+                      <br/>
+                    <img src={book.image} />
+                    <p>{book.description}</p>
                     <DeleteBtn onClick={() => this.deleteBook(book._id)} />
+                    <ViewBtn href={book.link} />
                   </ListItem>
                 ))}
               </List>
