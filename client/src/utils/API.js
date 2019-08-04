@@ -2,13 +2,13 @@ import axios from "axios";
 
 export default {
   searchBooks: function(title) {
-    console.log(title)
     return axios.get("/api/books/search", {
       params: {
         title
       }
     }).then(res => {
-      return res.data.items
+      console.log(res.data)
+      return res.data
     })
   },
   // Gets all books

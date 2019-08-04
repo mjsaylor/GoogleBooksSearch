@@ -1,11 +1,10 @@
 import React, { Component } from "react";
-import DeleteBtn from "../components/DeleteBtn";
 import Jumbotron from "../components/Jumbotron";
 import API from "../utils/API";
 import { Link } from "react-router-dom";
 import { Col, Row, Container } from "../components/Grid";
 import { List, ListItem } from "../components/List";
-import { Input, TextArea, FormBtn } from "../components/Form";
+import { Input, FormBtn } from "../components/Form";
 
 class Books extends Component {
   state = {
@@ -18,12 +17,16 @@ class Books extends Component {
   }
 
   searchBooks = (title) => {
-    console.log(title)
     API.searchBooks(title)
-      .then(books => {
-        console.log(books)
-        this.setState({ books: books, title: "", author: "", synopsis: "" })
-  })
+      .then(data => {
+        if (data.error) {
+          console.error(data.error)
+        } else {
+          const books = data.items
+          this.setState({ books: books, title: "" })
+        }
+
+      })
       .catch(err => console.log(err));
   };
 
@@ -81,9 +84,9 @@ class Books extends Component {
               <List>
                 {this.state.books.map(book => (
                   <ListItem key={book.id}>
-                      <strong>
-                        {book.volumeInfo.title} by {book.volumeInfo.authors}
-                      </strong>
+                    <strong>
+                      {book.volumeInfo.title} by {book.volumeInfo.authors}
+                    </strong>
                   </ListItem>
                 ))}
               </List>
